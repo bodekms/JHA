@@ -17,10 +17,10 @@ namespace MyTracker.Extensions
                     .AddHttpClient()
                     .AddSingleton<ILogger, Logger<Program>>()
                     .AddTransient<IConfigurationService, ConfigurationService>()
-                    .AddTransient<RedditTrackerService>()
+                    .AddTransient<IRedditTrackerService, RedditTrackerService>()
                     .AddTransient<IPostProcessor, PostProcessorService>()
                     .AddSingleton<IRedditApiClient, RedditApiClient>()
-                    .AddSingleton<TrackerLoggerService>();
+                    .AddSingleton<ITrackerLoggerService, TrackerLoggerService>();
             }).UseConsoleLifetime();
 
             return hostBuilder;

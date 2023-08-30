@@ -13,17 +13,18 @@ namespace MyTracker
         public decimal RateLimitRemaining { get; private set; }
         public decimal RateLimitResetInSeconds { get; private set; }
 
-        private readonly string _defaultBaseUrl = "https://oauth.reddit.com/";
+        private readonly string _defaultBaseUrl;
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfigurationService _configurationService;
-        private readonly TrackerLoggerService _logger;
+        private readonly ITrackerLoggerService _logger;
 
-        public RedditApiClient(IHttpClientFactory httpClientFactory, IConfigurationService configurationService, TrackerLoggerService logger)
+        public RedditApiClient(IHttpClientFactory httpClientFactory, IConfigurationService configurationService, ITrackerLoggerService logger)
         {
             _httpClientFactory = httpClientFactory;
             _configurationService = configurationService;
             _logger = logger;
+            _defaultBaseUrl = _configurationService.GetSetting("Reddit:BaseUrl", "");
         }
 
         public async Task<List<RedditPost>> GetNewPostsAsync(string subreddit)
@@ -35,7 +36,7 @@ namespace MyTracker
 
                 SetRequestHeaders(client);
 
-                var response = await client.GetAsync($"r/{subreddit}/new");
+                var response = await client.GetAsync($"/r/{subreddit}/new");
                 response.EnsureSuccessStatusCode();
 
                 ParseRequestLimitHeadersFromResponse(response.Headers);
@@ -70,14 +71,11 @@ namespace MyTracker
             if (headers == null) 
                 return;
 
-            if (Decimal.TryParse(headers.GetValues("x-ratelimit-remaining").FirstOrDefault(), out var remaining))
-            {
+            if (decimal.TryParse(headers.GetValues("x-ratelimit-remaining").FirstOrDefault(), out var remaining))
                 RateLimitRemaining = remaining;
-            };
+
             if (decimal.TryParse(headers.GetValues("x-ratelimit-reset").FirstOrDefault(), out var reset))
-            {
                 RateLimitResetInSeconds = reset;
-            };
         }
     }
 }

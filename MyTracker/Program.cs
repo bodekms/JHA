@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTracker.Extensions;
+using MyTracker.Interfaces;
 using MyTracker.Services;
 
 namespace MyTracker
@@ -42,11 +43,13 @@ namespace MyTracker
             };
 
             var services = serviceScope.ServiceProvider;
-            var loggerService = services.GetRequiredService<TrackerLoggerService>();
+            var loggerService = services.GetRequiredService<ITrackerLoggerService>();
             try
             {
-                var trackerService = services.GetRequiredService<RedditTrackerService>();
-                List<string> subReddits = new() { "askreddit" };
+                var trackerService = services.GetRequiredService<IRedditTrackerService>();
+
+                var configService = services.GetRequiredService<IConfigurationService>();
+                var subReddits = configService.GetSetting("Reddit:Subreddits", new List<string>());
 
                 await trackerService.TrackNewPostsInSubRedditsAsync(subReddits, cancellationTokenSource.Token);
             }

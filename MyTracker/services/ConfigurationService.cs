@@ -16,7 +16,7 @@ namespace MyTracker.Services
                     .AddJsonFile("config.json", optional: true, reloadOnChange: true)
                     .Build();
 
-            var value = config.GetValue<T>(key);
+            var value = config.GetSection(key).Get<T>();
 
             if (value == null)
                 return defaultValue;

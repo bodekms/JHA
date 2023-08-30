@@ -9,9 +9,9 @@ namespace MyTracker.Services
         private readonly IRedditApiClient _redditApiClient;
         private readonly IPostProcessor _postProcessor;
         private readonly IConfigurationService _configurationService;
-        private readonly TrackerLoggerService _trackerLoggerService;        
+        private readonly ITrackerLoggerService _trackerLoggerService;        
 
-        public RedditTrackerService(IRedditApiClient redditApiClient, IPostProcessor processor, IConfigurationService configurationService, TrackerLoggerService logger)
+        public RedditTrackerService(IRedditApiClient redditApiClient, IPostProcessor processor, IConfigurationService configurationService, ITrackerLoggerService logger)
         {
             _redditApiClient = redditApiClient;
             _postProcessor = processor;

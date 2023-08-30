@@ -9,9 +9,9 @@ namespace MyTracker.Services
         private readonly Dictionary<string, Dictionary<string, CountStore>> _upvoteCount = new();
         private readonly Dictionary<string, Dictionary<string, CountStore>> _authorCount = new();
 
-        private readonly TrackerLoggerService _logger;
+        private readonly ITrackerLoggerService _logger;
 
-        public PostProcessorService(TrackerLoggerService logger)
+        public PostProcessorService(ITrackerLoggerService logger)
         {
             _logger = logger;
         }
