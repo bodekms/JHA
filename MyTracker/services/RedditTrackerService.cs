@@ -58,7 +58,7 @@ namespace MyTracker.Services
                 _trackerLoggerService.LogToConsole($"***************** Stats [/r/{subreddit}]  *****************");
                 _trackerLoggerService.LogToConsole($"Post with most upvotes (overall): {_postProcessor.GetPostWithMostUpvotes(subreddit).MostUpvotesDisplay()}");
                 _trackerLoggerService.LogToConsole($"Author with most posts (overall): {_postProcessor.GetAuthorWithMostPosts(subreddit)}");
-                _trackerLoggerService.LogToConsole($"Post with most upvotes (since monitoring began): {_postProcessor.GetPostWithMostUpvotesSinceMonitoringStart(subreddit).MostUpvotesDisplay()}");
+                _trackerLoggerService.LogToConsole($"Post with most upvotes (since monitoring began): {_postProcessor.GetPostWithMostUpvotesSinceMonitoringStart(subreddit).Title}");
                 _trackerLoggerService.LogToConsole($"Author with most posts (since monitoring began): {_postProcessor.GetAuthorWithMostPostsSinceMonitoringStart(subreddit)}");
                 _trackerLoggerService.LogToConsole("********************************************************");
                 _trackerLoggerService.LogToConsole(string.Empty);

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using MyTracker.Interfaces;
 using MyTracker.Models;
 using MyTracker.Services;
 
@@ -58,8 +59,8 @@ namespace MyTracker.Tests
             posts.Add(actualMostUpvotes);
             posts.Add(lowestUpvotes);
 
-            var loggerMock = new Mock<ILogger>();
-            var processorService = new PostProcessorService(new TrackerLoggerService(loggerMock.Object));
+            var trackerLoggerMock = new Mock<ITrackerLoggerService>();
+            var processorService = new PostProcessorService(trackerLoggerMock.Object);
 
             Assert.IsNotNull(posts);
 
@@ -90,8 +91,8 @@ namespace MyTracker.Tests
             };
             posts.Add(originalMostUpvotes);
 
-            var loggerMock = new Mock<ILogger>();
-            var processorService = new PostProcessorService(new TrackerLoggerService(loggerMock.Object));
+            var trackerLoggerMock = new Mock<ITrackerLoggerService>();
+            var processorService = new PostProcessorService(trackerLoggerMock.Object);
 
             //Act
             await processorService.ProcessNewPostsAsync(SUBREDDIT_NAME, posts);
@@ -131,8 +132,8 @@ namespace MyTracker.Tests
                 });
             }
 
-            var loggerMock = new Mock<ILogger>();
-            var processorService = new PostProcessorService(new TrackerLoggerService(loggerMock.Object));
+            var trackerLoggerMock = new Mock<ITrackerLoggerService>();
+            var processorService = new PostProcessorService(trackerLoggerMock.Object);
 
             //Act
             await processorService.ProcessNewPostsAsync(SUBREDDIT_NAME, posts);
@@ -148,21 +149,33 @@ namespace MyTracker.Tests
             //Arrange
             var posts = GeneratePosts();
 
-            var loggerMock = new Mock<ILogger>();
-            var processorService = new PostProcessorService(new TrackerLoggerService(loggerMock.Object));
+            var trackerLoggerMock = new Mock<ITrackerLoggerService>();
+            var processorService = new PostProcessorService(trackerLoggerMock.Object);
 
             //Act
             await processorService.ProcessNewPostsAsync(SUBREDDIT_NAME, posts);
 
-            var newPost = posts[3];
-            newPost.Data.Id = "101";
-            posts.Add(newPost);
+            var authorName = posts[3].Data.Author;
+
+            for (int i = 0; i < 5; i++)
+            {
+                posts.Add(new RedditPost
+                {
+                    Data = new RedditPostData
+                    {
+                        Id = (i + 100).ToString(),
+                        Author = authorName,
+                        Title = "Added post",
+                        Ups = 0
+                    }
+                });
+            }
 
             await processorService.ProcessNewPostsAsync(SUBREDDIT_NAME, posts);
             var newAuthor = processorService.GetAuthorWithMostPostsSinceMonitoringStart(SUBREDDIT_NAME);
 
             //Assert
-            Assert.AreEqual(newAuthor, $"{newPost.Data.Author} (1)");
+            Assert.AreEqual(newAuthor, $"{authorName} (5)");
 
         }
     }
