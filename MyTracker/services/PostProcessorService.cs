@@ -95,6 +95,9 @@ namespace MyTracker.Services
         }
         public string GetAuthorWithMostPostsSinceMonitoringStart(string subreddit)
         {
+            if (_authorCount[subreddit].Count == 0)
+                return "No repeat authors since polling began";
+
             var kvp = _authorCount[subreddit].MaxBy(x => x.Value.DifferenceAfterMostRecentRequest);
 
             if (kvp.Value.DifferenceAfterMostRecentRequest == 0)

@@ -39,7 +39,7 @@ namespace MyTracker.Services
 
                         DisplayStatsIfRequestCountMet(subReddit, requestCounter, displayStatsAfterNumberOfRequests);
 
-                        await AddRequiredApiRequestDelayAsync();
+                        await AddRequiredApiRequestDelayAsync(subReddits.Count);
                     }
                 });
             }
@@ -65,12 +65,19 @@ namespace MyTracker.Services
             }
         }
 
-        private async Task AddRequiredApiRequestDelayAsync()
+        private async Task AddRequiredApiRequestDelayAsync(int numberOfSubredditsMonitoring)
         {
+            if (_redditApiClient.RateLimitRemaining == 0)
+            {
+                _trackerLoggerService.LogToConsole($"Request limit reached, waiting for reset in {_redditApiClient.RateLimitResetInSeconds} seconds");
+                await Task.Delay(Convert.ToInt32(_redditApiClient.RateLimitResetInSeconds) * 1000);
+                return;
+            }
             decimal delayInSeconds = _redditApiClient.RateLimitResetInSeconds / _redditApiClient.RateLimitRemaining;
             int roundedUpDelayInSeconds = Convert.ToInt32(Math.Ceiling(delayInSeconds));
 
-            await Task.Delay(roundedUpDelayInSeconds * 1000);
+            await Task.Delay(roundedUpDelayInSeconds * numberOfSubredditsMonitoring * 1000);
+
             Console.Write(".");
         }
     }

@@ -18,7 +18,7 @@ namespace MyTracker.Extensions
                     .AddSingleton<ILogger, Logger<Program>>()
                     .AddTransient<IConfigurationService, ConfigurationService>()
                     .AddTransient<IRedditTrackerService, RedditTrackerService>()
-                    .AddTransient<IPostProcessor, PostProcessorService>()
+                    .AddSingleton<IPostProcessor, PostProcessorService>()
                     .AddSingleton<IRedditApiClient, RedditApiClient>()
                     .AddSingleton<ITrackerLoggerService, TrackerLoggerService>();
             }).UseConsoleLifetime();
