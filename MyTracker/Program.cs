@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTracker.Extensions;
+using MyTracker.Helpers;
 using MyTracker.Interfaces;
 using MyTracker.Services;
 
@@ -49,7 +50,7 @@ namespace MyTracker
                 var trackerService = services.GetRequiredService<IRedditTrackerService>();
 
                 var configService = services.GetRequiredService<IConfigurationService>();
-                var subReddits = configService.GetSetting("Reddit:Subreddits", new List<string>());
+                var subReddits = RedditHelpers.SubRedditsToTrack;
 
                 await trackerService.TrackNewPostsInSubRedditsAsync(subReddits, cancellationTokenSource.Token);
             }
