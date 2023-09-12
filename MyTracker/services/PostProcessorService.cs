@@ -18,6 +18,11 @@ namespace MyTracker.Services
 
         public async Task ProcessNewPostsAsync(string subreddit, List<RedditPost> posts)
         {
+            if (string.IsNullOrEmpty(subreddit))
+                throw new ArgumentNullException(nameof(subreddit));
+            if (posts == null)
+                throw new ArgumentNullException(nameof(posts));
+
             CreateSubredditDictionariesIfNotExist(subreddit);
 
             try

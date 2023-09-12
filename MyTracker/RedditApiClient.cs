@@ -29,6 +29,9 @@ namespace MyTracker
 
         public async Task<List<RedditPost>> GetNewPostsAsync(string subreddit)
         {
+            if (string.IsNullOrEmpty(subreddit))
+                throw new ArgumentNullException(nameof(subreddit));
+
             try
             {
                 var client = _httpClientFactory.CreateClient();

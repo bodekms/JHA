@@ -21,6 +21,15 @@ namespace MyTracker.Services
 
         public async Task TrackNewPostsInSubRedditsAsync(List<string> subReddits, CancellationToken cancellationToken = default)
         {
+            if (subReddits == null)
+                throw new ArgumentNullException(nameof(subReddits));
+            if (subReddits.Count == 0)
+            {
+                _trackerLoggerService.LogToConsole("No subreddits being tracked. Exiting...");
+                return;
+            }
+                
+
             int displayStatsAfterNumberOfRequests = _configurationService.GetSetting("Reddit:DisplayStatsAfterNumberOfRequests", 10);
 
             try
