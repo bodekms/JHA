@@ -24,8 +24,4 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="rd &quot;$(SolutionDir)\bin\Debug&quot;" />
-  </Target>
-
 </Project>
